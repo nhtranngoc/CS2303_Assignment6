@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
 
 // function prototype
 int copyfile1(char* infilename, char* outfilename);
@@ -47,7 +53,7 @@ int main(int argc, char* argv[])
   outfilename = argv[2];
 
   // Perform the copying
-  int returnstatus = copyfile1(infilename, outfilename);
+  int returnstatus = copyfile2(infilename, outfilename);
   
   return returnstatus;
 }
@@ -89,4 +95,28 @@ int copyfile1(char* infilename, char* outfilename) {
   fclose(outfile);
 
   return 0; // Success!
+}
+
+int copyfile2(char* infilename, char* outfilename){
+  int infile = open(infilename, O_RDONLY);
+  if (infile < 0){
+    printf("Error %d in cptest.c: %s\n", errno, strerror(errno));
+    return 1;
+  }
+  int outfile= open(outfilename,  O_CREAT | O_WRONLY,
+                                  S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+
+  if (outfile < 0){
+    printf("Error %d in cptest.c: %s\n", errno, strerror(errno));
+    return 1;
+  }
+
+  int byte;
+  char buf[1024];
+  while (byte = read(infile, buf, 1024) > 0){
+    write(outfile, buf, byte);
+  }
+
+  close(infile);
+  close(outfile);
 }
