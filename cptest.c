@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
   outfilename = argv[2];
 
   // Perform the copying
-  int returnstatus = copyfile2(infilename, outfilename);
+  int returnstatus = copyfile1(infilename, outfilename);
   
   return returnstatus;
 }
@@ -111,7 +111,7 @@ int copyfile2(char* infilename, char* outfilename){
     return 1;
   }
 
-  int byte;
+  int byte;-
   char buf[1024];
   while (byte = read(infile, buf, 1) > 0){
     write(outfile, buf, byte);
@@ -120,3 +120,12 @@ int copyfile2(char* infilename, char* outfilename){
   close(infile);
   close(outfile);
 }
+
+//Using copyfile2 to copy emacs-x 
+// time ./cptest /usr/bin/emacs-x emacs-x1
+
+// real  0m37.412s
+// user  0m5.968s
+// sys 0m27.806s
+
+//Using copyfile1 to copy emacs-x
