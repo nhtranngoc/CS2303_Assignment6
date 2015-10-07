@@ -121,6 +121,30 @@ int copyfile2(char* infilename, char* outfilename){
   close(outfile);
 }
 
+int copyfile3(char* infilename, char* outfilename, int bufSize){
+  int infile = open(infilename, O_RDONLY);
+  if (infile < 0){
+    printf("Error %d in cptest.c: %s\n", errno, strerror(errno));
+    return 1;
+  }
+  int outfile= open(outfilename,  O_CREAT | O_WRONLY,
+                                  S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+
+  if (outfile < 0){
+    printf("Error %d in cptest.c: %s\n", errno, strerror(errno));
+    return 1;
+  }
+
+  int byte;
+  char buf[bufSize];
+  while (byte = read(infile, buf, bufSize) > 0){
+    write(outfile, buf, byte);
+  }
+
+  close(infile);
+  close(outfile);
+}
+
 //Using copyfile2 to copy emacs-x 
 // time ./cptest /usr/bin/emacs-x emacs-x1
 
@@ -129,3 +153,10 @@ int copyfile2(char* infilename, char* outfilename){
 // sys 0m27.806s
 
 //Using copyfile1 to copy emacs-x
+// time ./cptest /usr/bin/emacs-x emacs-x1
+
+// real  0m0.215s
+// user  0m0.140s
+// sys 0m0.012s
+
+//Using copyfile3 to copy emacs-x
