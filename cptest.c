@@ -113,7 +113,7 @@ int copyfile2(char* infilename, char* outfilename){
 
   int byte;
   char buf[1024];
-  while (byte = read(infile, buf, 1024) > 0){
+  while (byte = read(infile, buf, 1) > 0){
     write(outfile, buf, byte);
   }
 
