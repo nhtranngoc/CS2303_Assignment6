@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
   outfilename = argv[2];
 
   // Perform the copying
-  int returnstatus = copyfile1(infilename, outfilename);
+  int returnstatus = copyfile3(infilename, outfilename, 1024);
   
   return returnstatus;
 }
@@ -145,13 +145,6 @@ int copyfile3(char* infilename, char* outfilename, int bufSize){
   close(outfile);
 }
 
-//Using copyfile2 to copy emacs-x 
-// time ./cptest /usr/bin/emacs-x emacs-x1
-
-// real  0m37.412s
-// user  0m5.968s
-// sys 0m27.806s
-
 //Using copyfile1 to copy emacs-x
 // time ./cptest /usr/bin/emacs-x emacs-x1
 
@@ -159,4 +152,16 @@ int copyfile3(char* infilename, char* outfilename, int bufSize){
 // user  0m0.140s
 // sys 0m0.012s
 
+//Using copyfile2 to copy emacs-x 
+// time ./cptest /usr/bin/emacs-x emacs-x1
+
+// real  0m37.412s
+// user  0m5.968s
+// sys 0m27.806s
+
 //Using copyfile3 to copy emacs-x
+// time ./cptest /usr/bin/emacs-x emacs-x1
+
+// real  0m0.190s
+// user  0m0.108s
+// sys 0m0.024s
