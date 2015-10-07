@@ -111,7 +111,7 @@ int copyfile2(char* infilename, char* outfilename){
     return 1;
   }
 
-  int byte;-
+  int byte;
   char buf[1024];
   while (byte = read(infile, buf, 1) > 0){
     write(outfile, buf, byte);
