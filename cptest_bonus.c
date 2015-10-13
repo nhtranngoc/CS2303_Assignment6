@@ -16,7 +16,6 @@
 int copyfile1(char* infilename, char* outfilename);
 struct timeval * gettimeelapsed(struct timeval * start, struct timeval * end);
 void printtime(struct timeval * tm);
-void generateOutName(char* infilename, char* outfilename);
 
 /** cptest.cpp
  * A file copying program.
@@ -104,12 +103,24 @@ int main(int argc, char** argv){
   // Perform the copying
   // returnVal = copy();
   int i;
+  struct stat sb;
+  char* outdir;
+  char* filename;
   for(i=0;i<count-1;i++){
+    char* outfilenameFinal;
     infilename=argList[i];
     printf("infilename: %s\n", infilename);
-    generateOutName(infilename, outfilename);
-    printf("Generated outfilename: %s\n", outfilename);
-    returnVal=copy(infilename, outfilename, functionmode, bufSize);
+    if (stat(outfilename, &sb) == 0 && S_ISDIR(sb.st_mode)){
+    // printf("It's a directory!\n");
+      outdir = outfilename;
+      filename = basename(infilename);
+      outfilename = (char*)malloc(sizeof(char) * (strlen(outdir) + strlen(filename) + 2));
+      strcat(outfilename, outdir);
+      strcat(outfilename, "/");
+      strcat(outfilename, filename);
+      strcat(outfilename, "\0");
+      returnVal=copy(infilename, outfilename, functionmode, bufSize);
+    }
   }
   gettimeofday(tmEnd, NULL);
   tmDiff = gettimeelapsed(tmStart, tmEnd);
@@ -155,26 +166,6 @@ int copy(char* infilename, char* outfilename, int functionmode, int bufSize){
     case 3:
       returnVal = copyfile3(infilename, outfilename, bufSize);
     break;
-  }
-}
-
-/**
- * Checks if infilename is a directory, generate outfilename accordingly
- */
-void generateOutName(char* infilename, char* outfilename){
-  struct stat sb;
-  char* outdir;
-  char* filename;
-  if (stat(outfilename, &sb) == 0 && S_ISDIR(sb.st_mode)){
-  // printf("It's a directory!\n");
-    outdir = outfilename;
-    filename = basename(infilename);
-    outfilename = (char*)malloc(sizeof(char) * (strlen(outdir) + strlen(filename) + 2));
-    strcat(outfilename, outdir);
-    strcat(outfilename, "/");
-    strcat(outfilename, filename);
-    strcat(outfilename, "\0");
-    printf("Generated outfilename in func: %s\n", outfilename);
   }
 }
 
