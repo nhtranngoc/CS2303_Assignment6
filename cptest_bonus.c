@@ -76,7 +76,7 @@ int main(int argc, char** argv){
       break;
       
       case '?':
-        if (optopt == 'c')
+        if ((optopt == 'c') | (optopt == 'b'))
           fprintf (stderr, "Option -%c requires an argument.\n", optopt);
         else if (isprint (optopt))
           fprintf (stderr, "Unknown option `-%c'.\n", optopt);
@@ -136,10 +136,20 @@ int main(int argc, char** argv){
   return returnVal;
 }
 
+/**
+ * @brief Print time from timeval struct.
+ * @param timeval Struct to print time.
+ */
 void printtime(struct timeval * tm){
   printf("%ld seconds, %ld microseconds\n", tm->tv_sec, tm->tv_usec);
 }
 
+/**
+ * @brief Calculate time elapsed and put it to a timeval struct
+ * @param start Starting timeval 
+ * @param end Ending timeval
+ * @return A timeval struct containing difference in time interval.
+ */
 struct timeval * gettimeelapsed(struct timeval * start, struct timeval * end){
   struct timeval * diff = (struct timeval *)malloc(sizeof(struct timeval));
   diff->tv_sec = end->tv_sec - start->tv_sec;
@@ -152,6 +162,14 @@ struct timeval * gettimeelapsed(struct timeval * start, struct timeval * end){
   return diff;
 }
 
+/**
+ * @brief Copy based on function mode.
+ * @param infilename Pointer to input file name
+ * @param outfilename Pointer to output file name
+ * @param functionmode Operating mode
+ * @param bufSize Size of buffer
+ * @return Status value
+ */
 int copy(char* infilename, char* outfilename, int functionmode, int bufSize){
   int returnVal;
   switch(functionmode){
@@ -208,6 +226,11 @@ int copyfile1(char* infilename, char* outfilename){
   return 0; // Success!
 }
 
+/** Copies one file to another using open, close, one character at a time.
+ @param infilename Name of input file
+ @param outfilename Name of output file
+ @return 0 if successful, 1 if error.
+*/
 int copyfile2(char* infilename, char* outfilename){
   int infile = open(infilename, O_RDONLY);
   if (infile < 0){
@@ -232,6 +255,12 @@ int copyfile2(char* infilename, char* outfilename){
   close(outfile);
 }
 
+/** Copies one file to another using open, close, with variable buffer size.
+ @param infilename Name of input file
+ @param outfilename Name of output file
+ @param bufSize Size of buffer to use.
+ @return 0 if successful, 1 if error.
+*/
 int copyfile3(char* infilename, char* outfilename, int bufSize){
   int infile = open(infilename, O_RDONLY);
   if (infile < 0){

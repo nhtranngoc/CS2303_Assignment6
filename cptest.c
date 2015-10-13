@@ -182,6 +182,11 @@ int copyfile1(char* infilename, char* outfilename) {
   return 0; // Success!
 }
 
+/** Copies one file to another using open, close, one character at a time.
+ @param infilename Name of input file
+ @param outfilename Name of output file
+ @return 0 if successful, 1 if error.
+*/
 int copyfile2(char* infilename, char* outfilename){
   int infile = open(infilename, O_RDONLY);
   if (infile < 0){
@@ -206,6 +211,12 @@ int copyfile2(char* infilename, char* outfilename){
   close(outfile);
 }
 
+/** Copies one file to another using open, close, with variable buffer size.
+ @param infilename Name of input file
+ @param outfilename Name of output file
+ @param bufSize Size of buffer to use.
+ @return 0 if successful, 1 if error.
+*/
 int copyfile3(char* infilename, char* outfilename, int bufSize){
   int infile = open(infilename, O_RDONLY);
   if (infile < 0){
